@@ -1,0 +1,28 @@
+{
+  "id": "root",
+  "title": "Racine",
+  "stack": [
+    "intro",
+    "corps1",
+    "final"
+  ],
+  "blocks": {
+    "intro": {
+      "type": "text",
+      "texte": "Bienvenue à vous ici !\nVous êtes sur le premier \"noeud\" de cet arbre dédié à vous présenter les fonctionnalités disponibles. \nCet arbre est également une exposition du cahier des charges écrit à posteriori des tâches effectuées."
+    },
+    "final": {
+      "type": "text",
+      "texte": "Maintenant je vous laisse cliquer sur \"suivant\" pour aller voir \"Fonctionnalités\" et vous donner l'eau à la bouche pour savoir tout ce qui est possible de faire !"
+    },
+    "corps1": {
+      "type": "text",
+      "texte": "Il y a tout de même certaines choses à savoir : \n\t1. Ce projet a été fait entre février et avril 2026, par pur initiative personnel ; \n\t2. Si vous avez un problème, quelque chose qui ne se fait pas, faite ctrl+shift+i pour afficher la console avec les erreurs écrites ;\n\t3. Ce projet est entièrement gratuit, fondé sur le principe de relecture par les pairs, dans l'optique de proposer un outil aussi complet qu'util en plus de pouvoir être diffusé sans limite. "
+    }
+  },
+  "suivant": [
+    "new_node",
+    "cahier_des_charges"
+  ],
+  "validite": true
+}
