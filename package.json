@@ -1,0 +1,43 @@
+{
+  "name": "prototype",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.monapp.app",
+    "productName": "Prototype",
+    "win": {
+      "target": "nsis"
+    },
+    "directories": {
+      "buildResources": "assets"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "TON_USERNAME",
+        "repo": "TON_REPO"
+      }
+  ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "electron-updater": "^6.8.3",
+    "jszip": "^3.10.1",
+    "unzipper": "^0.12.3",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "electron": "^41.3.0",
+    "electron-builder": "^26.8.1"
+  }
+}
