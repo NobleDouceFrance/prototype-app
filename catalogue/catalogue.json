@@ -7,8 +7,9 @@
       "title": "Arbre de démonstration",
       "description": "Un petit arbre pour tester le téléchargement",
       "folder": "creation_test",
-      "zip": "https://raw.github.com/NobleDouceFrance/prototype-app//main/catalogue/simple.zip",
+      "zip": "https://raw.githubusercontent.com/NobleDouceFrance/prototype-app//main/catalogue/simple.zip",
       "nodes": 3,
+
       "root":"root"
     },
     {
@@ -16,7 +17,7 @@
       "title": "Quiz simple",
       "description": "Quelques questions pour tester",
       "folder": "creation_test",
-      "zip": "https://raw.github.com/NobleDouceFrance/prototype-app//main/catalogue/simple.zip",
+      "zip": "https://raw.githubusercontent.com/NobleDouceFrance/prototype-app//main/catalogue/simple.zip",
       "nodes": 5
     }
   ]
