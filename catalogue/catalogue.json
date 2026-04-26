@@ -1,0 +1,23 @@
+{
+  "page": 1,
+  "last_update": "2026-04-23",
+  "arbres": [
+    {
+      "id": "creation_test",
+      "title": "Arbre de démonstration",
+      "description": "Un petit arbre pour tester le téléchargement",
+      "folder": "creation_test",
+      "zip": "https://raw.github.com/NobleDouceFrance/prototype-app//main/catalogue/simple.zip",
+      "nodes": 3,
+      "root":"root"
+    },
+    {
+      "id": "creation_test",
+      "title": "Quiz simple",
+      "description": "Quelques questions pour tester",
+      "folder": "creation_test",
+      "zip": "https://raw.github.com/NobleDouceFrance/prototype-app//main/catalogue/simple.zip",
+      "nodes": 5
+    }
+  ]
+}
