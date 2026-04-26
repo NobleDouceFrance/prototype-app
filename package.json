@@ -26,8 +26,8 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "NOBLEDOUCEFRANCE",
-        "repo": "PROTOTYPE_APP"
+        "owner": "NobleDouceFrance",
+        "repo": "prototype-app"
       }
   ]
   },
