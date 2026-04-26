@@ -30,18 +30,50 @@ function createWindow() {
     //win.webContents.openDevTools();
 }
 function initUserData() {
+    // 1. dossiers de base
     if (!fs.existsSync(dataPath)) {
         fs.mkdirSync(dataPath, { recursive: true });
     }
     if (!fs.existsSync(arbresPath)) {
         fs.mkdirSync(arbresPath, { recursive: true });
     }
+    // 2. progress
     if (!fs.existsSync(progressPath)) {
         fs.writeFileSync(progressPath, JSON.stringify({ arbres: {} }, null, 2));
     }
-    if (!fs.existsSync(indexPath)) {
-      fs.writeFileSync(indexPath, JSON.stringify({ arbres: [],creations:[] }, null, 2));
+    // 3. index global
+    let index = { arbres: [], creations: [] };
+
+    if (fs.existsSync(indexPath)) {
+        index = JSON.parse(fs.readFileSync(indexPath, "utf-8"));
     }
+    // 4. injection default-data
+    const defaultPath = path.join(__dirname, "default-data", "arbres");
+    if (fs.existsSync(defaultPath)) {
+        const defaultTrees = fs.readdirSync(defaultPath);
+        for (const entry of defaultTrees) {
+            if (!entry.isDirectory()) continue;
+            const treeId=entry.name;
+            const src = path.join(defaultPath, treeId);
+            const dest = path.join(arbresPath, treeId);
+            // 🔹 copie seulement si absent
+            if (!fs.existsSync(dest)) {
+                fs.cpSync(src, dest, { recursive: true });
+            }
+            // 🔹 ajout dans index.arbres SI absent
+            const exists = index.arbres.some(a => a.id === treeId);
+            if (!exists) {
+                index.arbres.push({
+                    id: treeId,
+                    title: treeId,
+                    folder: treeId,
+                    root: "root"
+                });
+            }
+        }
+    }
+    // 5. sauvegarde index
+    fs.writeFileSync(indexPath, JSON.stringify(index, null, 2));
 }
 app.whenReady().then(() => {
     initUserData();
