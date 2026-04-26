@@ -1,0 +1,21 @@
+{
+  "id": "new_node",
+  "title": "Fonctionnalités",
+  "stack": [
+    "texte1",
+    "b1776942261032"
+  ],
+  "blocks": {
+    "texte1": {
+      "type": "text",
+      "texte": "Laissez-moi vous montrer tout ce qu'il est possible de faire : \n\nTout d'abord il y a de simple texte que vous pouvez lire, comme celui-ci. \n\tÀ peine plus impressionant : cette indentation (qui n'est pas un comportement natif à html pour l'écriture et la lecture). \n "
+    },
+    "b1776942261032": {
+      "type": "vof",
+      "question": "Avez-vous compris ?",
+      "answers": true,
+      "explication": "Espace d'explication"
+    }
+  },
+  "validite": true
+}

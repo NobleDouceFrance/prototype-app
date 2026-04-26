@@ -1,0 +1,24 @@
+{
+  "id": "cahier_des_charges",
+  "title": "Cahier des Charges",
+  "stack": [
+    "b1776936416128",
+    "b1776952496580",
+    "b1776952742867"
+  ],
+  "blocks": {
+    "b1776936416128": {
+      "type": "text",
+      "texte": "J'ai d'abord eu l'idée de faire un logiciel pour \"apprendre\", initialement pour récupérer et lier les pages de Wikipédia, ce qui me semblait très simple puisqu'une page à bien souvent une section \"articles connexes/détaillés\". \n\nIl m'a donc fallu avoir un aspect \"lecture\", sauf que, enfaite, scraper Wikipédia c'est relativement pénible, alors autant que je fasse les liaisons moi-même au rythme de mes lectures et découvertes. \nEt là m'est venu l'idée de faire plus que simplement répertorier de la lecture : pourquoi ne pas me faire l'outil pédagogique ultime, avec création et suivi ! \n\nLà il vous manque une information... Depuis la terminale, avant chaque rentrée je me faisais un script pour rendre l'apprentissage ludique et actif pour être plus efficace (et passer moi de temps encore...) \nVoici la liste des types de programmes que j'ai écrit : \n - Un simple .csv pour répertorier des duos de question-réponse, et un .py pour me mettre une fenêtre et un label avec son input ;\n - Un suivi plus poussé avec roulement entre différentes tâches (à la manière d'un emploi du temps pour la semaine, avec : devoir répondre x fois à tel matière, et donc x fois d'autres avant de pouvoir faire la x+1 ième fois ; \n - Puis un .xlsx (tableur type excel), pour être moins intrusif, pour être plus simple que devoir mettre un formatage spécifique. \n\nSauf qu'aucun n'a durée plus de 2 mois... \nDonc maintenant ça fait 3 mois que je code en javascript (une première.)"
+    },
+    "b1776952496580": {
+      "type": "text",
+      "texte": "Il me fallait donc : \nUne interface pour lire \n>Lire du texte, des images, des liens etc. \n >Séparer entre des \"noeuds\", pour une représentation par arbre dans le sens informatique du terme. \n  >Relier des noeuds et faire un suivis pour ne pas avoir à parcourir tout à la main à chaque, ni pour perdre toute la progression à chaque session/fermeture."
+    },
+    "b1776952742867": {
+      "type": "text",
+      "texte": "Une interfaxe pour écrire\n>Intégrer une base de données avec permission d'écriture (une première hors .txt et .csv)\n >Une interface pour écrire les \"noeuds\" (parce que faire les .json à la mains ça va 2 minutes pas plus.)\n  >"
+    }
+  },
+  "validite": true
+}
