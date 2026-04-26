@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Éditeur d'arbres</title>
+        <link rel="stylesheet" href="../css/style.css">
+    </head>
+
+    <body>
+        <header>
+            <h1>Mes arbres en cours</h1>
+            <a href="accueil.html">Retour</a>
+        </header>
+        
+        <main>
+            
+            <button id="newTree">➕ Nouvel arbre</button>
+            <button id="importTree">📥 Importer un .ZIP</button>
+            <!-- popup import -->
+            <div id="popupImport" style="display:none;">
+                <div class="content">
+                    <h3>Importer un arbre</h3>
+                    <input type="file" id="fileInput">
+                    <br><br>
+                    <button onclick="fermerPopup()">Annuler</button>
+                </div>
+            </div>
+            <div id="popupCreate" style="display:none;">
+                <div class="content">
+                    <h3>Créer un arbre</h3>
+                    <input type="text" id="newTreeName" placeholder="Nom de l'arbre">
+                    <br><br>
+                    <button id="confirmCreate">Créer</button>
+                    <button onclick="fermerPopupCreate()">Annuler</button>
+                </div>
+            </div>
+
+            <div id="listeArbres"></div>
+            
+            <div id="graphContainer" style="display:none;">
+                <h3>Visualisation de l'arbre</h3>
+                <div id="graph"></div>
+            </div>
+        </main>
+        <script src="../js/editeur.js"></script>
+    </body>
+</html>

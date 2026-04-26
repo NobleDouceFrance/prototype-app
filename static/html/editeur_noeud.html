@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Éditeur de noeud</title>
+        <link rel="stylesheet" href="../css/style.css">
+    </head>
+
+    <body>
+        <header>
+            <h1>Éditeur de noeud</h1>
+            <button id="previewMode">👁 Mode utilisateur</button>
+            <a href="editeur.html">Retour</a>
+        </header>
+
+        <main>
+            <section>
+                <button id="btnSupprimerNoeud">Supprimer le noeud</button>
+                <br>
+                <br>
+                <button id="btnChangementTitre">Changer Titre</button>
+                <input id="nodeTitle" placeholder="Titre du node">
+                <p id="scoreNode">Score : 0 / 0</p>
+                <br><br>
+                <div id="blocsContainer"></div>
+                <br>
+                <br>
+                <br>
+                <button id="addBlock">➕ Ajouter un bloc</button>
+                <!-- popup choix bloc -->
+                <div id="popupType" style="display:none;">
+                    <div class="content">
+                        <h3>Type de bloc</h3>
+                        <button onclick="ajouterBloc('text')">Texte</button>
+                        <button onclick="ajouterBloc('qcm')">QCM</button>
+                        <button onclick="ajouterBloc('vof')">Vrai ou Faux</button>
+                        <button onclick="ajouterBloc('iframe')">Intégrer une fenêtre</button>
+                        <button onclick="ajouterBloc('q')">Question ouverte</button>
+                    </div>
+                </div>
+                <div id="popupOverlay" class="hidden">
+                    <div class="popupContent">
+                        <h3>Ajouter un suivant</h3>
+                        <!-- choix mode -->
+                        <button id="btnChoisirExistant">Choisir un node existant</button>
+                        <button id="btnCreerNode">Créer un nouveau node</button>
+                        <!-- zone dynamique -->
+                        <div id="popupZone"></div>
+                        <button id="closePopup">Fermer</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <h3>Navigation</h3>
+            <div id="suivantsContainer"></div>
+            <button id="reorderBlocks">Changer l'ordre des blocs</button>
+            <button id="addNext">➕ Ajouter un suivant</button>
+            <br>
+            <br>
+            <button id="saveNode">💾 Sauvegarder</button>
+            <br>
+            <div id="previewContainer"></div>
+            <br>
+            <button id="validateTree">Valider le noeud</button>
+            <br>
+            <br>
+            <a href="editeur.html">⬅ Retour</a>
+            <div id="popupStack" class="overlay hidden">
+                <div class="popupContent">
+                    <h3>Réorganiser les blocs</h3>
+                    <div id="stackContainer"></div>
+                    <button id="saveOrder">Valider</button>
+                    <button id="closeStack">Fermer</button>
+
+                </div>
+            </div>
+        </footer>
+        <script src="../js/editeur_noeud.js"></script>
+    </body>
+</html>
