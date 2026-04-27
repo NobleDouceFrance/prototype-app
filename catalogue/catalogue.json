@@ -6,7 +6,7 @@
       "id": "simple",
       "title": "Arbre de démonstration",
       "description": "Un petit arbre pour tester le téléchargement",
-      "folder": "creation_test",
+      "folder": "siple",
       "zip": "https://raw.githubusercontent.com/NobleDouceFrance/prototype-app/main/catalogue/simple.zip",
       "nodes": 3,
 
