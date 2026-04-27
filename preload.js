@@ -19,8 +19,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     downloadAndInstall: (url, folder) => ipcRenderer.invoke("download-install", url, folder),
 
-    downloadAndInstall1: (url, folder) => ipcRenderer.invoke("download-install1", url, folder),
-
     deleteArbre: (id) => ipcRenderer.invoke("delete-arbre", id),
 
     duplicateArbre: (id) => ipcRenderer.invoke("duplicate-arbre", id),
@@ -34,7 +32,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
     deleteNode:(arbreId,nodeId)=>ipcRenderer.invoke("delete-node",arbreId,nodeId),
 
     loadAllNodes:(arbreId)=>ipcRenderer.invoke("load-all-nodes",arbreId),
-
 });
 contextBridge.exposeInMainWorld("testAPI", {
     ping: () => "pong"
