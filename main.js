@@ -10,7 +10,7 @@ const { file } = require("jszip");
 const userDataPath = app.getPath("userData");
 const dataPath = path.join(userDataPath, "data");
 // fichiers
-const progressPath = path.join(dataPath, "progress.json");
+const progressPath = path.join(userDataPath,"progress", "progress.json");
 const arbresPath = path.join(dataPath, "arbres");
 const indexPath = path.join(dataPath, "index.json");
 
