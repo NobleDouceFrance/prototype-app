@@ -47,11 +47,10 @@ async function chargerArbres(){
                 alert("Aucun arbre chargé");
                 return;
             }
-            const folder = `data/arbres/${arbre.folder}`;
             if(window.electronAPI){
                 console.log("Export ZIP en cours...");
                 try{
-                    const path = await window.electronAPI.exportZip(folder);
+                    const path = await window.electronAPI.exportZip(arbre.folder);
                     alert("Export terminé :\n" + path);
                     window.electronAPI.openExternal("https://github.com/ton-repo/");
                 }catch(e){
@@ -63,7 +62,7 @@ async function chargerArbres(){
             }else{
                 alert("Electron non disponible");
             }
-            };
+        };
             div.appendChild(title);
             div.appendChild(openBtn);
             div.appendChild(exportBtn);
