@@ -3,7 +3,6 @@ const { app, BrowserWindow, ipcMain, shell } = require("electron");
 const fs = require("fs");
 const path = require("path");
 const archiver = require("archiver");
-//const progressPath = "./progress/progress.json";
 const https = require("https");
 const unzipper = require("unzipper");
 const { file } = require("jszip");
@@ -118,23 +117,28 @@ ipcMain.handle("export-test", async (event, folder) => {
     console.log("EXPORT TEST :", folder);
 });
 ipcMain.handle("export-zip", async (event, folder) => {
-    const outputPath = path.join(require("electron").app.getPath("downloads"),folder.split("/").pop() + ".zip");
+    const outputPath = path.join(
+        require("electron").app.getPath("downloads"),
+        folder + ".zip"
+    );
     return new Promise((resolve, reject) => {
         const output = fs.createWriteStream(outputPath);
         const archive = archiver("zip", { zlib: { level: 9 } });
-
         output.on("close", () => {
             console.log("ZIP créé :", outputPath);
             resolve(outputPath);
         });
-        archive.on("error", (err) => {
-            reject(err);
-        });
+        archive.on("error", reject);
         archive.pipe(output);
-        archive.directory(path.join(arbresPath, folder), false);
+        // 🔥 IMPORTANT : dossier racine = folder
+        archive.directory(
+            path.join(arbresPath, folder),
+            folder
+        );
         archive.finalize();
     });
 });
+
 ipcMain.handle("create-tree", async (event, id, name) => {
     const basePath = path.join(arbresPath, id);
     const nodesPath = path.join(basePath, "nodes");
@@ -185,7 +189,6 @@ ipcMain.handle("download-install", async (event, url, folder) => {
     let index = JSON.parse(fs.readFileSync(indexPath, "utf-8"));
     index = cleanIndex(index);
     fs.writeFileSync(indexPath, JSON.stringify(index, null, 2));
-
     const alreadyInstalled = [
         ...(index.arbres || []),
         ...(index.creations || [])
@@ -193,52 +196,50 @@ ipcMain.handle("download-install", async (event, url, folder) => {
     if (!/^[a-zA-Z0-9_-]+$/.test(folder)) {
         throw new Error("Nom de dossier invalide");
     }
-    if (alreadyInstalled){
+    if (alreadyInstalled) {
         throw new Error("Arbre déjà installé");
     }
     const zipPath = path.join(app.getPath("downloads"), folder + ".zip");
     const extractPath = path.join(arbresPath, folder);
-
-    if (fs.existsSync(extractPath)){
+    if (fs.existsSync(extractPath)) {
         throw new Error("Dossier déjà existant");
     }
-    // 🔴 CAS LOCAL
-    if(!url.startsWith("http")){
+    // 📦 1. Récupérer le ZIP
+    if (!url.startsWith("http")) {
         console.log("ZIP LOCAL");
-
         const localPath = path.join(__dirname, url);
-
-        await fs.createReadStream(localPath)
+        await fs.createReadStream(localPath).pipe(unzipper.Extract({ path: extractPath })).promise();
+    } else {
+        console.log("ZIP DISTANT");
+        await new Promise((resolve, reject) => {
+            const file = fs.createWriteStream(zipPath);
+            https.get(url, response => {
+                response.pipe(file);
+                file.on("finish", () => {file.close(resolve);});
+            }).on("error", reject);
+        });
+        await fs.createReadStream(zipPath)
             .pipe(unzipper.Extract({ path: extractPath }))
             .promise();
-
-        return true;
     }
-    // 🟢 CAS DISTANT
-    console.log("ZIP DISTANT");
-
-    await new Promise((resolve, reject) => {
-        const file = fs.createWriteStream(zipPath);
-
-        https.get(url, response => {
-            response.pipe(file);
-
-            file.on("finish", () => {
-                file.close(resolve);
-            });
-        }).on("error", reject);
-    });
-    
-    await fs.createReadStream(zipPath)
-        .pipe(unzipper.Extract({ path: extractPath }))
-        .promise();
-
-    const indexFile = path.join(extractPath, "index.json");
-
+    // 📂 2. Vérification structure
+    const innerPath = path.join(extractPath, folder);
+    if (!fs.existsSync(innerPath)) {
+        fs.rmSync(extractPath, { recursive: true, force: true });
+        throw new Error("Structure invalide (dossier racine manquant)");
+    }
+    const indexFile = path.join(innerPath, "index.json");
     if (!fs.existsSync(indexFile)) {
         fs.rmSync(extractPath, { recursive: true, force: true });
-        throw new Error("Archive invalide");
+        throw new Error("Archive invalide (index.json manquant)");
     }
+    const parsed = JSON.parse(fs.readFileSync(indexFile, "utf-8"));
+    if (!parsed.noeuds || !Array.isArray(parsed.noeuds)) {
+        throw new Error("Index invalide");
+    }
+    // 🔁 3. Flatten dossier
+    fs.cpSync(innerPath, extractPath, { recursive: true });
+    fs.rmSync(innerPath, { recursive: true, force: true });
     return true;
 });
 ipcMain.handle("delete-arbre", async (event, arbreId) => {
