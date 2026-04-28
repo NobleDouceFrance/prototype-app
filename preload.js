@@ -32,6 +32,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
     deleteNode:(arbreId,nodeId)=>ipcRenderer.invoke("delete-node",arbreId,nodeId),
 
     loadAllNodes:(arbreId)=>ipcRenderer.invoke("load-all-nodes",arbreId),
+
 });
 contextBridge.exposeInMainWorld("testAPI", {
     ping: () => "pong"
