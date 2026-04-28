@@ -15,19 +15,27 @@ const arbresPath = path.join(dataPath, "arbres");
 const indexPath = path.join(dataPath, "index.json");
 
 const { autoUpdater } = require("electron-updater");
-
 function createWindow() {
+    const isDev = !app.isPackaged;
+    const basePath = isDev? __dirname: path.join(process.resourcesPath, "app.asar");
     const win = new BrowserWindow({
         webPreferences: {
-            preload: path.join(__dirname, "preload.js"),
+            preload: path.join(basePath, "preload.js"),
             contextIsolation: true,
             nodeIntegration: false
         }
     });
     win.maximize();
-    win.loadFile("static/html/accueil.html"); // 👈 TON POINT D’ENTRÉE
-    //win.webContents.openDevTools();
+    const htmlPath = path.join(basePath, "static", "html", "accueil.html");
+    console.log("LOAD HTML:", htmlPath);
+    console.log("PRELOAD:", path.join(basePath, "preload.js"));
+    win.loadFile(htmlPath);
+    win.webContents.on("did-fail-load", (e, code, desc) => {
+        console.error("LOAD FAIL:", code, desc);
+    });
+    win.webContents.openDevTools();
 }
+
 function initUserData() {
     // 1. dossiers de base
     if (!fs.existsSync(dataPath)) {
@@ -37,22 +45,26 @@ function initUserData() {
         fs.mkdirSync(arbresPath, { recursive: true });
     }
     // 2. progress
+    const progressDir = path.dirname(progressPath);
+    if (!fs.existsSync(progressDir)) {
+        fs.mkdirSync(progressDir, { recursive: true });
+    }
     if (!fs.existsSync(progressPath)) {
         fs.writeFileSync(progressPath, JSON.stringify({ arbres: {} }, null, 2));
     }
     // 3. index global
     let index = { arbres: [], creations: [] };
-
     if (fs.existsSync(indexPath)) {
         index = JSON.parse(fs.readFileSync(indexPath, "utf-8"));
     }
     // 4. injection default-data
-    const defaultPath = path.join(__dirname, "default-data", "arbres");
+    const basePath = app.isPackaged ? process.resourcesPath : __dirname;
+    const defaultPath = path.join(basePath, "default-data", "arbres");
     if (fs.existsSync(defaultPath)) {
-        const defaultTrees = fs.readdirSync(defaultPath);
+        const defaultTrees = fs.readdirSync(defaultPath, { withFileTypes: true });
         for (const entry of defaultTrees) {
             if (!entry.isDirectory()) continue;
-            const treeId=entry.name;
+            const treeId = entry.name;
             const src = path.join(defaultPath, treeId);
             const dest = path.join(arbresPath, treeId);
             // 🔹 copie seulement si absent
@@ -75,9 +87,13 @@ function initUserData() {
     fs.writeFileSync(indexPath, JSON.stringify(index, null, 2));
 }
 app.whenReady().then(() => {
-    initUserData();
-    createWindow();
-    autoUpdater.checkForUpdatesAndNotify();
+    try {
+        initUserData();
+        createWindow();
+        autoUpdater.checkForUpdatesAndNotify();
+    } catch (e) {
+        console.error("INIT ERROR:", e);
+    }
 });
 // save progress
 ipcMain.handle("save-progress", (event, progress)=>{
@@ -223,11 +239,16 @@ ipcMain.handle("download-install", async (event, url, folder) => {
             .promise();
     }
     // 📂 2. Vérification structure
-    const innerPath = path.join(extractPath, folder);
-    if (!fs.existsSync(innerPath)) {
+    const entries = fs.readdirSync(extractPath, { withFileTypes: true });
+    const dirs = entries.filter(e => e.isDirectory());
+    if (dirs.length !== 1) {
         fs.rmSync(extractPath, { recursive: true, force: true });
-        throw new Error("Structure invalide (dossier racine manquant)");
+        throw new Error("Structure invalide (1 dossier attendu)");
     }
+    if (dirs[0].name !== folder) {
+        console.warn("Nom dossier différent du catalogue");
+    }
+    const innerPath = path.join(extractPath, dirs[0].name);
     const indexFile = path.join(innerPath, "index.json");
     if (!fs.existsSync(indexFile)) {
         fs.rmSync(extractPath, { recursive: true, force: true });
