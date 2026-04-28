@@ -9,30 +9,35 @@
     "build": "electron-builder"
   },
   "build": {
-    "appId": "com.prototype.app",
+    "appId": "com.monapp.prototype",
     "productName": "Prototype",
     "win": {
       "target": "nsis"
     },
+    "linux":{
+      "target":"AppImage"
+    },
     "directories": {
-      "output":"dist"
       "buildResources": "assets"
     },
-     "files": [
-      "**/*",
-      "!data/**",
-      "!node_modules/.cache/**"
-    ],
     "publish": [
       {
         "provider": "github",
         "owner": "NobleDouceFrance",
         "repo": "prototype-app"
       }
-  ]
+    ],
+    "files":[
+      "main.js",
+      "preload.js",
+      "package.json",
+      "static/**/*",
+      "default-data/**/*",
+      "*/*"
+    ]
   },
   "keywords": [],
-  "author": "NobleDouceFrance",
+  "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
