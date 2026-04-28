@@ -1,11 +1,13 @@
-const url_catalogue="./data/catalog.json";
+const url_catalogue="https://raw.githubusercontent.com/NobleDouceFrance/prototype-app//main/catalogue/catalogue.json";
 
 async function initCatalogue(){
+    console.log("catalogue en chargement");
     try{
         const res = await fetch(url_catalogue);
         const data = await res.json();
 
         afficherCatalogue(data.arbres);
+        console.log()
 
     }catch(e){
         console.error("Erreur catalogue", e);
@@ -57,11 +59,13 @@ async function afficherCatalogue(arbres){
     }
 }
 async function telechargerArbre(arbre){
+    console.log(arbre,arbre.folder);
     try{
         if (await isArbreInstalle(arbre.id)){
             alert("Déjà installé");
             return;
         }
+        
         await window.electronAPI.downloadAndInstall(arbre.zip, arbre.folder);
 
         const res =await ajouterDansIndex(arbre);
@@ -75,6 +79,7 @@ async function telechargerArbre(arbre){
     }
 }
 async function ajouterDansIndex(arbre){
+    console.log(arbre);
     const data = await window.electronAPI.loadIndex();
 
     if(data.arbres.some(a => a.id === arbre.id)){
@@ -84,9 +89,6 @@ async function ajouterDansIndex(arbre){
 
     if(!data.arbres) data.arbres = [];
 
-    if (!data.id || !data.title){
-        throw new Error("index.json invalide");
-    }
     if(!data.arbres.find(a => a.id === arbre.id)){
         if (!arbre.root){
             arbre.root="root";
@@ -102,7 +104,7 @@ async function ajouterDansIndex(arbre){
             nb_noeud:arbre.nb_noeud
         });
     }
-    await window.electronAPI.saveFile(path, JSON.stringify(data, null, 2));
+    await window.electronAPI.saveIndex(data);
 }
 async function isArbreInstalle(id){
     const index = await window.electronAPI.loadIndex();
