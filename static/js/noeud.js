@@ -11,12 +11,10 @@ let preview= false;
 async function init(){
     // 2. charger index
     let arbre = await window.electronAPI.loadIndexArbre(arbreId);
-    if (!arbre){
-        arbre=index.creations.find(a => a.id === arbreId);
-        if (arbre){
-            preview=true;
+    const index = await window.electronAPI.loadIndex();
+    if (index.creations.find(a => a.id === arbreId)){
+        preview=true;
         }
-    }
     if (preview){
         retourEdition();
     } 
@@ -52,7 +50,7 @@ async function init(){
     // score node
     calculerScoreNode(node);
     // score arbre
-    const scoreArbre = await calculerProgression(arbre.folder);
+    const scoreArbre = await calculerProgression();
     document.getElementById("scoreArbre").textContent =`score de l'arbre : ${scoreArbre.fait} / ${scoreArbre.total}`;
     // overlay
     const overlay = document.getElementById("popupOverlay");
@@ -69,7 +67,7 @@ async function init(){
         afficherBloc(block, blockId, container);
     });
     // bouton suivant
-    if(node.suivant === null){
+    if(node.suivant == null){
         document.getElementById("suivant").textContent = "Terminer";
     }
     document.getElementById("suivant").onclick = async () => {
@@ -82,18 +80,15 @@ async function init(){
             nodeProgress.validated = true;
         }
         saveProgress(progress);
-        gererSuivant(node, arbreFolder);
+        gererSuivant(node);
     };
     saveProgress(progress);
 }
 init();
 function saveProgress(progress){
-    console.log("ici");
     try{
         if (!preview){
             window.electronAPI.saveProgress(progress);
-        }else{
-            console.log("preview : true");
         }
     }catch(e){
         console.error("Erreur sauvegarde", e);
@@ -352,7 +347,8 @@ function afficherQ(block,id,container){
     container.appendChild(div);
 }
 
-async function findNextUnvalidated(folder){
+async function findNextUnvalidated(){
+    console.log("find next");
     const visited = new Set();
     const queue = ["root"];
 
@@ -363,7 +359,7 @@ async function findNextUnvalidated(folder){
 
         visited.add(id);
 
-        const node = await window.electronAPI.loadNode(folder,id);
+        const node = await window.electronAPI.loadNode(arbreId,id);
         const nodeProg =progress.arbres?.[arbreId]?.nodes?.[id];
 
         if(!nodeProg || !nodeProg.validated){
@@ -382,62 +378,56 @@ async function findNextUnvalidated(folder){
     return null;
 }
 async function choisirSuivant(liste){
-    const overlay = document.getElementById("popupOverlay");
+    console.log("liste",liste);
+    document.getElementById("popupOverlay").classList.remove("hidden");
     const choixDiv = document.getElementById("popupChoices");
     choixDiv.innerHTML = "";
 
-    for(const nodeId of liste){
-        const node = await window.electronAPI.loadNode(arbreFolder,nodeId);
+    const nodes = await Promise.all(liste.map(id => window.electronAPI.loadNode(arbreId, id)));
+
+    nodes.forEach((node, i) => {
+        const id = liste[i];
         const btn = document.createElement("button");
         btn.textContent = node.title;
 
         btn.onclick = () => {
-            window.location.href ="noeud.html?arbre="+arbreId+"&node="+nodeId;
+            window.location.href = `noeud.html?arbre=${arbreId}&node=${id}`;
         };
+
         choixDiv.appendChild(btn);
-    }
-    overlay.classList.remove("hidden");
+    });
 }
-async function gererSuivant(node, folder){
+async function gererSuivant(node){
     if(!node){
-        console.error("node non défini dans gererSuivant");
+        console.error("node non défini");
         return;
     }
     const suivant = node.suivant;
-    if(node.suivant===null){
-        const next = await findNextUnvalidated(folder);
-        if(next===nodeId){
+    if(suivant == null){
+        const next = await findNextUnvalidated();
+        console.log(next);
+        if(next === nodeId){
             alert("Terminez cette page !");
             return;
         }
         if(next){
-            window.location.href ="noeud.html?arbre="+arbreId+"&node="+next;
-        }
-        else{
-            alert("Félicitation ! Arbre terminé !");
-            window.location.href = "arbre.html?id=" + arbreId;
+            window.location.href = `noeud.html?arbre=${arbreId}&node=${next}`;
+        } else {
+            alert("Félicitations !");
+            window.location.href = `arbre.html?id=${arbreId}`;
         }
         return;
     }
     if(typeof suivant === "string"){
-        window.location.href ="noeud.html?arbre="+arbreId+"&node="+suivant;
+        window.location.href = `noeud.html?arbre=${arbreId}&node=${suivant}`;
         return;
     }
     if(Array.isArray(suivant)){
         if(suivant.length === 1){
-            window.location.href ="noeud.html?arbre="+arbreId+"&node="+suivant[0];
-        }
-        else{
+            window.location.href = `noeud.html?arbre=${arbreId}&node=${suivant[0]}`;
+        } else {
             choisirSuivant(suivant);
         }
-    }
-}
-function retourPremierNonValide(index){
-    const next = findNextUnvalidated(index, arbreId, progress);
-    if(next){
-        window.location.href ="noeud.html?arbre=" + arbreId + "&node=" + next;
-    } else {
-        alert("Arbre terminé");
     }
 }
 document.getElementById("popupOverlay").addEventListener("click", (e)=>{
@@ -486,8 +476,8 @@ function calculerScoreNode(node){
     document.getElementById("scoreNode").textContent =`score du noeud : ${correct} / ${total}`;
     return;
 }
-async function calculerProgression(folder){
-    if(!folder){
+async function calculerProgression(){
+    if(!arbreId){
         console.error("folder non défini dans calculerProgression");
         return {fait:0,total:0};
     }
@@ -502,7 +492,7 @@ async function calculerProgression(folder){
 
         visited.add(id);
 
-        const node = await window.electronAPI.loadNode(folder,id);
+        const node = await window.electronAPI.loadNode(arbreId,id);
 
         if(!node){
             console.error("Node introuvable :", id);
