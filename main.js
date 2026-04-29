@@ -43,25 +43,24 @@ autoUpdater.on("update-downloaded", () => {
 });
 
 function createWindow() {
-    const isDev = !app.isPackaged;
-    const basePath = isDev? __dirname: path.join(process.resourcesPath, "app.asar");
     const win = new BrowserWindow({
         webPreferences: {
-            preload: path.join(basePath, "preload.js"),
+            preload: path.join(__dirname, "preload.js"),
             contextIsolation: true,
             nodeIntegration: false
         }
     });
+
     win.maximize();
-    const htmlPath = path.join(basePath, "static", "html", "accueil.html");
+
+    const htmlPath = path.join(__dirname, "static", "html", "accueil.html");
+
     console.log("LOAD HTML:", htmlPath);
-    console.log("PRELOAD:", path.join(basePath, "preload.js"));
+    console.log("PRELOAD:", path.join(__dirname, "preload.js"));
+
     win.loadFile(htmlPath);
-    win.webContents.on("did-fail-load", (e, code, desc) => {
-        console.error("LOAD FAIL:", code, desc);
-    });
-    win.webContents.openDevTools();
 }
+
 
 function initUserData() {
     // 1. dossiers de base
@@ -85,20 +84,31 @@ function initUserData() {
         index = JSON.parse(fs.readFileSync(indexPath, "utf-8"));
     }
     // 4. injection default-data
-    const basePath = app.isPackaged? __dirname: path.join(process.resourcesPath, "app.asar");
-    const defaultPath = path.join(basePath, "default-data", "arbres");
+    console.log("avant default data");
+    const basePath = __dirname;
+    console.log("second print après basepath");
+    const defaultPath = path.join(__dirname, "default-data", "arbres");
+
+    console.log("DEFAULT PATH:", defaultPath);
+
+    if (!fs.existsSync(defaultPath)) {
+        console.error("❌ default-data introuvable dans le build");
+        return;
+    }
+
     if (fs.existsSync(defaultPath)) {
+        console.log("entrer dans le test file existant");
         const defaultTrees = fs.readdirSync(defaultPath, { withFileTypes: true });
+        console.log("default treees :",defaultTrees);
         for (const entry of defaultTrees) {
             if (!entry.isDirectory()) continue;
+
             const treeId = entry.name;
             const src = path.join(defaultPath, treeId);
             const dest = path.join(arbresPath, treeId);
-            // 🔹 copie seulement si absent
-            if (!fs.existsSync(dest)) {
-                fs.cpSync(src, dest, { recursive: true });
-            }
-            // 🔹 ajout dans index.arbres SI absent
+
+            copyRecursiveFromAsar(src,dest);
+
             const exists = index.arbres.some(a => a.id === treeId);
             if (!exists) {
                 index.arbres.push({
@@ -110,6 +120,7 @@ function initUserData() {
             }
         }
     }
+
     // 5. sauvegarde index
     fs.writeFileSync(indexPath, JSON.stringify(index, null, 2));
 }
@@ -122,6 +133,26 @@ app.whenReady().then(() => {
         console.error("INIT ERROR:", e);
     }
 });
+function copyRecursiveFromAsar(src, dest) {
+    if (!fs.existsSync(dest)) {
+        fs.mkdirSync(dest, { recursive: true });
+    }
+
+    const entries = fs.readdirSync(src, { withFileTypes: true });
+
+    for (const entry of entries) {
+        const srcPath = path.join(src, entry.name);
+        const destPath = path.join(dest, entry.name);
+
+        if (entry.isDirectory()) {
+            copyRecursiveFromAsar(srcPath, destPath);
+        } else {
+            const data = fs.readFileSync(srcPath);
+            fs.writeFileSync(destPath, data);
+        }
+    }
+}
+
 // save progress
 ipcMain.handle("save-progress", (event, progress)=>{
     fs.writeFileSync(progressPath, JSON.stringify(progress, null, 2));
