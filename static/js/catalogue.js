@@ -7,7 +7,6 @@ async function initCatalogue(){
         const data = await res.json();
 
         afficherCatalogue(data.arbres);
-        console.log()
 
     }catch(e){
         console.error("Erreur catalogue", e);
