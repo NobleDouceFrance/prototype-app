@@ -30,10 +30,8 @@
     "files": [
       "main.js",
       "preload.js",
-      "package.json",
       "static/**/*",
-      "default-data/**/*",
-      "*/*"
+      "default-data/**/*"
     ]
   },
   "keywords": [],
