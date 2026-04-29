@@ -15,6 +15,33 @@ const arbresPath = path.join(dataPath, "arbres");
 const indexPath = path.join(dataPath, "index.json");
 
 const { autoUpdater } = require("electron-updater");
+autoUpdater.logger = require("electron-log");
+autoUpdater.logger.transports.file.level = "info";
+
+autoUpdater.on("checking-for-update", () => {
+    console.log("🔍 Vérification des mises à jour...");
+});
+
+autoUpdater.on("update-available", info => {
+    console.log("⬆️ Mise à jour disponible:", info);
+});
+
+autoUpdater.on("update-not-available", () => {
+    console.log("✅ Pas de mise à jour");
+});
+
+autoUpdater.on("error", err => {
+    console.error("❌ Erreur autoUpdater:", err);
+});
+
+autoUpdater.on("download-progress", progress => {
+    console.log(`⬇️ ${Math.round(progress.percent)}%`);
+});
+
+autoUpdater.on("update-downloaded", () => {
+    console.log("📦 Mise à jour téléchargée");
+});
+
 function createWindow() {
     const isDev = !app.isPackaged;
     const basePath = isDev? __dirname: path.join(process.resourcesPath, "app.asar");
