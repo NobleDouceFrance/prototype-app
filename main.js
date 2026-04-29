@@ -85,7 +85,7 @@ function initUserData() {
         index = JSON.parse(fs.readFileSync(indexPath, "utf-8"));
     }
     // 4. injection default-data
-    const basePath = app.isPackaged ? process.resourcesPath : __dirname;
+    const basePath = isDev? __dirname: path.join(process.resourcesPath, "app.asar");
     const defaultPath = path.join(basePath, "default-data", "arbres");
     if (fs.existsSync(defaultPath)) {
         const defaultTrees = fs.readdirSync(defaultPath, { withFileTypes: true });
