@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 let progress;
 async function loadTrees() {
+    console.log("version 1.0.0");
     try {
         progress = await window.electronAPI.loadProgress();
         // Fetch du fichier index.json
