@@ -5,14 +5,13 @@
         <title>Éditeur de noeud</title>
         <link rel="stylesheet" href="../css/style.css">
     </head>
-
     <body>
         <header>
             <h1>Éditeur de noeud</h1>
             <button id="previewMode">👁 Mode utilisateur</button>
+            <a href="accueil.html">Accueil</a>
             <a href="editeur.html">Retour</a>
         </header>
-
         <main>
             <section>
                 <button id="btnSupprimerNoeud">Supprimer le noeud</button>
@@ -36,6 +35,8 @@
                         <button onclick="ajouterBloc('vof')">Vrai ou Faux</button>
                         <button onclick="ajouterBloc('iframe')">Intégrer une fenêtre</button>
                         <button onclick="ajouterBloc('q')">Question ouverte</button>
+                        <button onclick="ajouterBloc('image')">Image</button>
+                        <button onclick="ajouterBloc('video')">Vidéo</button>
                     </div>
                 </div>
                 <div id="popupOverlay" class="hidden">
@@ -51,7 +52,6 @@
                 </div>
             </section>
         </main>
-
         <footer>
             <h3>Navigation</h3>
             <div id="suivantsContainer"></div>
