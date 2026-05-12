@@ -1,5 +1,5 @@
 console.log("main.js chargé");
-const { app, BrowserWindow, ipcMain, shell } = require("electron");
+const { app, BrowserWindow, ipcMain, shell, dialog } = require("electron");
 const fs = require("fs");
 const path = require("path");
 const archiver = require("archiver");
@@ -9,10 +9,22 @@ const { file } = require("jszip");
 
 const userDataPath = app.getPath("userData");
 const dataPath = path.join(userDataPath, "data");
+const localUserDataPath = path.join(userDataPath, "user-data");
 // fichiers
-const progressPath = path.join(userDataPath,"progress", "progress.json");
+const progressPath = path.join(localUserDataPath,"progress.json");
+const profilePath =path.join(localUserDataPath, "profil.json");
 const arbresPath = path.join(dataPath, "arbres");
 const indexPath = path.join(dataPath, "index.json");
+
+const systemPath = app.isPackaged
+    ? path.join(process.resourcesPath,
+        "app.asar",
+        "default-data",
+        "systeme.json")
+    : path.join(__dirname,
+        "default-data",
+        "systeme.json");
+
 
 const { autoUpdater } = require("electron-updater");
 autoUpdater.logger = require("electron-log");
@@ -60,8 +72,6 @@ function createWindow() {
 
     win.loadFile(htmlPath);
 }
-
-
 function initUserData() {
     // 1. dossiers de base
     if (!fs.existsSync(dataPath)) {
@@ -70,13 +80,33 @@ function initUserData() {
     if (!fs.existsSync(arbresPath)) {
         fs.mkdirSync(arbresPath, { recursive: true });
     }
-    // 2. progress
-    const progressDir = path.dirname(progressPath);
-    if (!fs.existsSync(progressDir)) {
-        fs.mkdirSync(progressDir, { recursive: true });
+    // 2. userData
+    if (!fs.existsSync(localUserDataPath)) {
+        fs.mkdirSync(localUserDataPath, {
+            recursive: true
+        });
+    }
+    // progress.json
+    const oldProgressPath =path.join(userDataPath, "progress", "progress.json");
+    if (fs.existsSync(oldProgressPath) && !fs.existsSync(progressPath)) {
+        fs.copyFileSync(oldProgressPath,progressPath);
     }
     if (!fs.existsSync(progressPath)) {
-        fs.writeFileSync(progressPath, JSON.stringify({ arbres: {} }, null, 2));
+        fs.writeFileSync(progressPath,JSON.stringify(
+                {
+                    arbres: {}
+                },null,2));
+    }
+    // profile.json
+    if (!fs.existsSync(profilePath)) {
+        fs.writeFileSync(profilePath,JSON.stringify(
+                {
+                    id: null,
+                    pseudo: "",
+                    github: "",
+                    verified: false,
+                    created_at: Date.now()
+                },null,2));
     }
     // 3. index global
     let index = { arbres: [], creations: [] };
@@ -84,18 +114,12 @@ function initUserData() {
         index = JSON.parse(fs.readFileSync(indexPath, "utf-8"));
     }
     // 4. injection default-data
-    console.log("avant default data");
-    const basePath = __dirname;
-    console.log("second print après basepath");
     const defaultPath = path.join(__dirname, "default-data", "arbres");
-
     console.log("DEFAULT PATH:", defaultPath);
-
     if (!fs.existsSync(defaultPath)) {
         console.error("❌ default-data introuvable dans le build");
         return;
     }
-
     if (fs.existsSync(defaultPath)) {
         console.log("entrer dans le test file existant");
         const defaultTrees = fs.readdirSync(defaultPath, { withFileTypes: true });
@@ -216,6 +240,7 @@ ipcMain.handle("export-zip", async (event, folder) => {
 ipcMain.handle("create-tree", async (event, id, name) => {
     const basePath = path.join(arbresPath, id);
     const nodesPath = path.join(basePath, "nodes");
+    const profile = JSON.parse(fs.readFileSync(profilePath, "utf-8"));
     // 🔹 sécurité
     fs.mkdirSync(basePath, { recursive: true });
     fs.mkdirSync(nodesPath, { recursive: true });
@@ -237,8 +262,12 @@ ipcMain.handle("create-tree", async (event, id, name) => {
         id: id,
         title: name,
         root: "root",
-        node_count: 1,
-        noeuds: ["root"]
+        nb_noeuds: 1,
+        noeuds: ["root"],
+        version:1,
+        createur:profile,
+        description:"",
+        categories:[]
     };
     fs.writeFileSync(
         path.join(basePath, "index.json"),
@@ -255,7 +284,8 @@ ipcMain.handle("create-tree", async (event, id, name) => {
         id: id,
         title: name,
         folder: id,
-        root: "root"
+        root: "root",
+        version:1
     });
     fs.writeFileSync(indexPath, JSON.stringify(data, null, 2));
 });
@@ -365,38 +395,48 @@ function cleanIndex(index){
     return index;
 }
 ipcMain.handle("duplicate-arbre", async (event, arbreId) => {
-    const basePath = arbresPath
-
-    let index = JSON.parse(fs.readFileSync(indexPath));
-
-    const arbre = [...(index.arbres || []), ...(index.creations || [])]
-        .find(a => a.id === arbreId);
-
-    if(!arbre){
+    let index =JSON.parse(fs.readFileSync(indexPath));
+    const profile =JSON.parse(fs.readFileSync(profilePath, "utf-8"));
+    const arbre = [
+        ...(index.arbres || []),
+        ...(index.creations || [])
+    ].find(a => a.id === arbreId);
+    if (!arbre) {
         throw new Error("Arbre introuvable");
     }
     // 🔹 nouveau id
-    const newId = arbre.id + "_copy_" + Date.now();
+    const newId =arbre.id + "_copy_" + Date.now();
     const newFolder = newId;
-
-    const src = path.join(basePath, arbre.folder);
-    const dest = path.join(basePath, newFolder);
+    const src =path.join(arbresPath, arbre.folder);
+    const dest =path.join(arbresPath, newFolder);
     // 🔹 copie dossier
     fs.cpSync(src, dest, { recursive: true });
-    // 🔹 ajouter dans creations
-    if(!index.creations) index.creations = [];
-
+    // 🔹 charger index INTERNE du nouvel arbre
+    const arbreIndexPath =path.join(dest, "index.json");
+    let arbreIndex =JSON.parse(fs.readFileSync(arbreIndexPath, "utf-8"));
+    // 🔹 update metadata
+    arbreIndex.id = newId;
+    arbreIndex.title =arbre.title + "(copie)";
+    arbreIndex.version =(arbre.version || 1) + 1;
+    // 🔹 ancien créateur conservé
+    // 🔹 nouvel auteur
+    arbreIndex.auteur = profile;
+    // 🔹 sauvegarde index interne
+    fs.writeFileSync(arbreIndexPath,JSON.stringify(arbreIndex, null, 2));
+    // 🔹 ajout index global
+    if (!index.creations) {
+        index.creations = [];
+    }
     index.creations.push({
         id: newId,
-        title: arbre.title + " (copie)",
+        title: arbreIndex.title,
         folder: newFolder,
-        root:arbre.root
+        root: arbre.root,
+        version: arbreIndex.version,
     });
     // 🔹 clean
     index = cleanIndex(index);
-
-    fs.writeFileSync(indexPath, JSON.stringify(index, null, 2));
-
+    fs.writeFileSync(indexPath,JSON.stringify(index, null, 2));
     return true;
 });
 ipcMain.handle("load-node", async (event, arbreId, nodeId) => {
@@ -562,4 +602,50 @@ ipcMain.handle("load-all-nodes", async (event, arbreId) => {
     console.log("ici main ===============");
     console.log("nodes",nodes);
     return nodes;
+});
+ipcMain.handle("get-asset-path", (event, arbreId, fileName) => {
+    if(fileName.includes("..")){
+        throw new Error("Nom fichier invalide");
+    }
+    return path.join(arbresPath,arbreId,"assets",fileName);
+});
+ipcMain.handle("select-image", async (event, arbreId) => {
+    const result = await dialog.showOpenDialog({properties: ["openFile"]});
+    if(result.canceled || result.filePaths.length === 0){
+        return null;
+    }
+    const sourcePath = result.filePaths[0];
+    const fileName = path.basename(sourcePath);
+    const assetDir = path.join(arbresPath,arbreId,"assets");
+    if(!fs.existsSync(assetDir)){
+        fs.mkdirSync(assetDir, { recursive: true });
+    }
+    const destPath = path.join(assetDir, fileName);
+    fs.copyFileSync(sourcePath, destPath);
+    return fileName;
+});
+ipcMain.handle("select-video", async (event, arbreId) => {
+    const result = await dialog.showOpenDialog({properties: ["openFile"]});
+    if(result.canceled || result.filePaths.length === 0){
+        return null;
+    }
+    const sourcePath = result.filePaths[0];
+    const fileName = path.basename(sourcePath);
+    const assetDir = path.join(arbresPath,arbreId,"assets");
+    if(!fs.existsSync(assetDir)){
+        fs.mkdirSync(assetDir, { recursive: true });
+    }
+    const destPath = path.join(assetDir, fileName);
+    fs.copyFileSync(sourcePath, destPath);
+    return fileName;
+});
+ipcMain.handle("load-profile", async () => {
+    return JSON.parse(fs.readFileSync(profilePath, "utf-8"));
+});
+ipcMain.handle("save-profile", async (event, profile) => {
+    fs.writeFileSync(profilePath,JSON.stringify(profile, null, 2));
+    return true;
+});
+ipcMain.handle("load-system", async () => {
+    return JSON.parse(fs.readFileSync(systemPath, "utf-8"));
 });
