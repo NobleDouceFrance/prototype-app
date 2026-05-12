@@ -5,15 +5,12 @@
         <title>Éditeur d'arbres</title>
         <link rel="stylesheet" href="../css/style.css">
     </head>
-
     <body>
         <header>
             <h1>Mes arbres en cours</h1>
-            <a href="accueil.html">Retour</a>
-        </header>
-        
-        <main>
-            
+            <a href="accueil.html">Accueil</a>
+        </header>   
+        <main>  
             <button id="newTree">➕ Nouvel arbre</button>
             <button id="importTree">📥 Importer un .ZIP</button>
             <!-- popup import -->
@@ -34,9 +31,7 @@
                     <button onclick="fermerPopupCreate()">Annuler</button>
                 </div>
             </div>
-
             <div id="listeArbres"></div>
-            
             <div id="graphContainer" style="display:none;">
                 <h3>Visualisation de l'arbre</h3>
                 <div id="graph"></div>
