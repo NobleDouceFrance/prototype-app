@@ -41,6 +41,7 @@ async function init(){
     window.currentNode = node;
     // 5. UI
     document.getElementById("titre").textContent = node.title;
+    //document.getElementById("article-title").textContent=node.title;
     console.log("ici");
     const div = document.getElementById("footer");
     const link = document.createElement("a");
@@ -140,6 +141,10 @@ async function afficherBloc(block, blockId, container){
         afficherQuestion(block, blockId, container);
     }else if (block.type==="q"){
         afficherQ(block,blockId,container);
+    }else if (block.type==="image"){
+        afficherImage(block,blockId,container);
+    }else if (block.type==="video"){
+        afficherVideo(block,blockId,container);
     }
 }
 async function afficherQCM(block, blockId, container){
@@ -346,7 +351,28 @@ function afficherQ(block,id,container){
 
     container.appendChild(div);
 }
-
+async function afficherImage(block,blockId,container){
+    const img = document.createElement("img");
+    const assetPath = await window.electronAPI.getAssetPath(arbreId,block.src);
+    img.src = assetPath;
+    img.alt = block.alt || "";
+    img.style.maxWidth = "100%";
+    img.loading = "lazy";
+    container.appendChild(img);
+}
+async function afficherVideo(block, blockId,container){
+    const video = document.createElement("video");
+    const assetPath =await window.electronAPI.getAssetPath(arbreId,block.src);
+    video.src = assetPath;
+    video.controls = true;
+    video.style.maxWidth = "100%";
+    container.appendChild(video);
+    if(block.description){
+        const desc = document.createElement("p");
+        desc.textContent = block.description;
+        container.appendChild(desc);
+    }
+}
 async function findNextUnvalidated(){
     console.log("find next");
     const visited = new Set();
