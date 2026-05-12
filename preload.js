@@ -33,6 +33,15 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     loadAllNodes:(arbreId)=>ipcRenderer.invoke("load-all-nodes",arbreId),
 
+    getAssetPath: (arbreId, fileName) =>ipcRenderer.invoke("get-asset-path", arbreId, fileName),
+    selectImage: (arbreId) =>ipcRenderer.invoke("select-image", arbreId),
+    selectVideo: (arbreId) =>ipcRenderer.invoke("select-video", arbreId),
+
+    loadProfile: () =>ipcRenderer.invoke("load-profile"),
+    saveProfile: (profile) =>ipcRenderer.invoke("save-profile", profile),
+
+    loadSystem: () =>ipcRenderer.invoke("load-system"),
+
 });
 contextBridge.exposeInMainWorld("testAPI", {
     ping: () => "pong"
