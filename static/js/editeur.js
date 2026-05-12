@@ -52,7 +52,7 @@ async function chargerArbres(){
                 try{
                     const path = await window.electronAPI.exportZip(arbre.folder);
                     alert("Export terminé :\n" + path);
-                    window.electronAPI.openExternal("https://github.com/ton-repo/");
+                    window.electronAPI.openExternal("https://github.com/NobleDouceFrance/prototype-app/upload/main/catalogue/propositions");
                 }catch(e){
                     console.error(e);
                     alert("Erreur export");
