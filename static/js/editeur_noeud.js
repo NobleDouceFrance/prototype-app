@@ -44,10 +44,12 @@ async function afficherEditeur(){
     const container = document.getElementById("blocsContainer");
     container.innerHTML = "";
 
-    currentNode.stack.forEach(blockId => {
+    for(const blockId of currentNode.stack){
         const block = currentNode.blocks[blockId];
-        afficherBloc(block, blockId, container);
-    });
+        const blockContainer = document.createElement("div");
+        container.appendChild(blockContainer);
+        afficherBloc(block, blockId, blockContainer);
+    }
     const btn_suppr_noeud = document.getElementById("btnSupprimerNoeud");
     btn_suppr_noeud.onclick=async()=>{
         if (nodeId=="root") {
@@ -56,11 +58,11 @@ async function afficherEditeur(){
         }
         const confirmDelete = confirm(`Voulez-vous vraiment supprimer ce noeud ? \nTous les éléments ajouter : image, pdf, etc. sertont conservés.\n L'arbre sera reconnecter.`);
         if(!confirmDelete) return;
-        await supprimerNoeud();
+        await deleteNode(arbreId,nodeId);
     }
     afficherSuivants();
 }
-function afficherBloc(block, id, container){
+async function afficherBloc(block, id, container){
     const div = document.createElement("div");
     div.className = "bloc";
     
@@ -93,71 +95,50 @@ function afficherBloc(block, id, container){
     div.appendChild(idInput);
 
     if(block.type === "qcm"){
-        afficherBlocQCM(block, id, div);
+        await afficherBlocQCM(block, id, div);
     }else if(block.type === "text"){
-        // ATTENTION : inject du html, donc attention si <script> ! 
-        const textarea = document.createElement("textarea");
-        textarea.value = block.texte || "";
-        textarea.oninput = () => {
-            block.texte = textarea.value;
-            autoResizeTextarea(textarea);
-            triggerAutoSave();
-        };
-        setTimeout(() => {
-            autoResizeTextarea(textarea);
-        }, 0);
-        textarea.addEventListener("keydown", (e) => {
-            if(e.key === "Tab"){
-                e.preventDefault();
-
-                const start = textarea.selectionStart;
-                const end = textarea.selectionEnd;
-                // insérer une tabulation (ou espaces)
-                const tab = "\t"; // ou "\t" si tu préfères
-
-                textarea.value =
-                    textarea.value.substring(0, start) +
-                    tab +
-                    textarea.value.substring(end);
-                // replacer le curseur
-                textarea.selectionStart = textarea.selectionEnd = start + tab.length;
-                // mettre à jour ton block
-                block.texte = textarea.value;
-
-                triggerAutoSave();
-            }
-        });
-
-
-        div.appendChild(textarea);
-        
-        // bouton ajouter lien
-        const btnLink = document.createElement("button");
-        btnLink.textContent = "AJouter un effet";
-
-        btnLink.onclick = () => {
-            //const url = prompt("URL ?");
-            //const texte = prompt("Texte ?");
-            //if(!url || !texte){
-              //  alert("Au moins un élément est non spécifié");
-                //return;
-            //}
-            //const lien = `<a href="${url}" target="_blank">${texte}</a>`;
-            //textarea.value += lien;
-            //block.texte = textarea.value;
-            alert("Arrive bientôt ! (avec mettre en gras, souligné, changé la couleur, etc.)");
-        };
-        div.appendChild(btnLink);
+        await afficherBlocText(block,id,div);
     }else if (block.type==="vof"){
-        afficherBlocVoF(block, id, div);
+        await afficherBlocVoF(block, id, div);
     }else if (block.type==="iframe"){
-        afficherBlocIframe(block,id,div);
+        await afficherBlocIframe(block,id,div);
     }else if (block.type==="q"){
-        afficherBlocQ(block,id,div);
+        await afficherBlocQ(block,id,div);
+    }else if (block.type==="image"){
+        await afficherBlocImage(block,id,div);
     }
     container.appendChild(div);
 }
-function afficherBlocQCM(block, id, container){
+async function afficherBlocText(block,id,container){
+    // ATTENTION : inject du html, donc attention si <script> ! 
+    const textarea = document.createElement("textarea");
+    textarea.value = block.texte || "";
+    textarea.oninput = () => {
+        block.texte = textarea.value;
+        autoResizeTextarea(textarea);
+        triggerAutoSave();
+    };
+    setTimeout(() => {
+        autoResizeTextarea(textarea);
+    }, 0);
+    textarea.addEventListener("keydown", (e) => {
+        if(e.key === "Tab"){
+            e.preventDefault();
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            // insérer une tabulation (ou espaces)
+            const tab = "\t"; // ou "\t" si tu préfères
+            textarea.value =textarea.value.substring(0, start) +tab +textarea.value.substring(end);
+            // replacer le curseur
+            textarea.selectionStart = textarea.selectionEnd = start + tab.length;
+            // mettre à jour ton block
+            block.texte = textarea.value;
+            triggerAutoSave();
+        }
+    });
+    container.appendChild(textarea);
+}
+async function afficherBlocQCM(block, id, container){
     // question
     const inputQ = document.createElement("input");
     inputQ.placeholder = "Question";
@@ -237,7 +218,7 @@ function afficherBlocQCM(block, id, container){
     }, 0);
     container.appendChild(exp);
 }
-function afficherBlocVoF(block, id, container){
+async function afficherBlocVoF(block, id, container){
     // question
     const inputQ = document.createElement("input");
     inputQ.placeholder = "Question";
@@ -283,7 +264,7 @@ function afficherBlocVoF(block, id, container){
     container.appendChild(exp);
 }
 
-function afficherBlocIframe(block,id,container){
+async function afficherBlocIframe(block,id,container){
     console.log("affiche iframe");
     const inputURL = document.createElement("input");
     inputURL.placeholder = "URL";
@@ -297,7 +278,7 @@ function afficherBlocIframe(block,id,container){
     };
     container.appendChild(inputURL);
 }
-function afficherBlocQ(block,id,container){
+async function afficherBlocQ(block,id,container){
     const inputQ = document.createElement("input");
     inputQ.placeholder = "Question";
     inputQ.value = block.question;
@@ -339,6 +320,96 @@ function afficherBlocQ(block,id,container){
     }, 0);
     container.appendChild(exp);
 }
+async function afficherBlocImage(block,id,container){
+    const btn = document.createElement("button");
+    btn.textContent = "Choisir une image";
+
+    const preview = document.createElement("img");
+    preview.style.maxWidth = "300px";
+    preview.style.display = "block";
+    preview.style.marginTop = "10px";
+
+    if(block.src){
+        const assetPath = await window.electronAPI.getAssetPath(arbreId,block.src);
+        preview.src = assetPath;
+    }
+    btn.onclick = async () => {
+        const result = await window.electronAPI.selectImage(arbreId);
+        if(!result) return;
+        block.src = result;
+        const assetPath = await window.electronAPI.getAssetPath(arbreId,block.src);
+        preview.src = assetPath;
+        triggerAutoSave();
+    };
+    const inputAlt = document.createElement("input");
+    inputAlt.placeholder = "Texte alternatif";
+    inputAlt.value = block.alt;
+    //inputAlt.style.width="60%";
+    inputAlt.oninput = () => {
+        block.alt = inputAlt.value;
+        autoResizeInput(inputAlt);
+        triggerAutoSave();
+    };
+    const inputDescription = document.createElement("input");
+    inputDescription.placeholder = "Description";
+    inputDescription.value = block.description;
+    //inputDescription.style.width="60%";
+    inputDescription.oninput = () => {
+        block.description = inputDescription.value;
+        autoResizeInput(inputDescription);
+        triggerAutoSave();
+    };
+    container.appendChild(btn);
+    container.appendChild(preview);
+    container.appendChild(inputAlt);
+    container.appendChild(document.createElement("br"));
+    container.appendChild(inputDescription);
+}
+async function afficherBlocVideo(block, id, container){
+    const btn = document.createElement("button");
+    btn.textContent = "Choisir une vidéo";
+
+    const preview = document.createElement("video");
+    preview.style.maxWidth = "300px";
+    preview.style.display = "block";
+    preview.style.marginTop = "10px";
+    preview.controls = true;
+    preview.preload="metadata";
+
+    if(block.src){
+        const assetPath =await window.electronAPI.getAssetPath(arbreId,block.src);
+        preview.src = assetPath;
+    }
+    btn.onclick = async () => {
+        const result =await window.electronAPI.selectVideo(arbreId);
+        if(!result) return;
+        block.src = result;
+        const assetPath =await window.electronAPI.getAssetPath(arbreId,block.src);
+        preview.src = assetPath;
+        triggerAutoSave();
+    };
+    const inputAlt = document.createElement("input");
+    inputAlt.placeholder = "Texte alternatif";
+    inputAlt.value = block.alt || "";
+    inputAlt.oninput = () => {
+        block.alt = inputAlt.value;
+        autoResizeInput(inputAlt);
+        triggerAutoSave();
+    };
+    const inputDescription = document.createElement("input");
+    inputDescription.placeholder = "Description";
+    inputDescription.value = block.description || "";
+    inputDescription.oninput = () => {
+        block.description = inputDescription.value;
+        autoResizeInput(inputDescription);
+        triggerAutoSave();
+    };
+    container.appendChild(btn);
+    container.appendChild(preview);
+    container.appendChild(inputAlt);
+    container.appendChild(document.createElement("br"));
+    container.appendChild(inputDescription);
+}
 document.getElementById("addBlock").onclick = () => {
     if (document.getElementById("popupType").style.display=="block"){
         document.getElementById("popupType").style.display = "none";
@@ -361,6 +432,10 @@ function ajouterBloc(type){
         currentNode.blocks[id] = {type:"iframe",url:""};
     }else if (type==="q"){
         currentNode.blocks[id]={type:"q",question:"",reponse:""};
+    }else if (type==="image"){
+        currentNode.blocks[id]={type:"image",src:"",alt:"",description:""};
+    }else if (type==="video"){
+        currentNode.blocks[id]={type:"video",src:"",alt:"",description:""};
     }
     else{
         console.error("type indéfini :",type);
@@ -489,6 +564,7 @@ async function ajouterSuivant(id){
         const index=await window.electronAPI.loadIndexArbre(arbreId);
         if (!index.noeuds.includes(normalized_id)) {
             index.noeuds.push(normalized_id);
+            index.nb_noeuds=index.noeuds.length;
             console.log("maj index",index);
             await window.electronAPI.saveIndexArbre(arbreId,index);
         }      
@@ -517,7 +593,7 @@ async function addNodeToIndex(id){
     }
     if(!data.noeuds.includes(normalized_id)){
         data.noeuds.push(normalized_id);
-        data.node_count = data.noeuds.length;
+        data.nb_noeuds = data.noeuds.length;
     }
     await sauvegarderNoeud(currentNode);
 }
@@ -607,51 +683,44 @@ function calculerScoreNode(){
 }
 async function renameNode(newTitle) {
     if (nodeId === "root") return;
+    const oldId = nodeId;
     const newId = normalizeId(newTitle);
-    if (nodeId === newId) return;
+    if (oldId === newId) return;
     const nodes = await getAllNodes();
     if (nodes.includes(newId)) {
         alert("ID déjà existant");
         return;
     }
-    // 🔹 1. modifier currentNode AVANT tout
     currentNode.id = newId;
     currentNode.title = newTitle;
-    // 🔹 3. rename fichier
-    await window.electronAPI.renameNodeFile(arbreId, nodeId, newId);
-    // 🔹 2. sauvegarder TEMPORAIREMENT sous ancien nom
-    await sauvegarderNoeud(currentNode);
-    // 🔹 4. update tous les nodes
+    await sauvegarderNoeud(currentNode, true);
     for (const id of nodes) {
-        if (id === nodeId) continue;
-
-        const node = await window.electronAPI.loadNode(arbreId, id);
+        if (id === oldId) continue;
+        console.log(id,id.id);
+        const node =await window.electronAPI.loadNode(arbreId, id.id);
+        console.log(node);
         let modified = false;
-
-        if (node.suivant) {
-            if (typeof node.suivant === "string") {
-                if (node.suivant === nodeId) {
-                    node.suivant = newId;
-                    modified = true;
-                }
+        if (typeof node.suivant === "string") {
+            if (node.suivant === oldId) {
+                node.suivant = newId;
+                modified = true;
             }
-
-            if (Array.isArray(node.suivant)) {
-                const updated = node.suivant.map(n =>n === nodeId ? newId : n);
-                if (JSON.stringify(updated) !== JSON.stringify(node.suivant)) {
-                    node.suivant = updated;
-                    modified = true;
-                }
+        }
+        else if (Array.isArray(node.suivant)) {
+            const updated =
+                node.suivant.map(n =>n === oldId ? newId : n);
+            if (JSON.stringify(updated) !== JSON.stringify(node.suivant)) {
+                node.suivant = updated;
+                modified = true;
             }
         }
         if (modified) {
             await sauvegarderNoeud(node, true);
         }
     }
-    // 🔹 5. update index
-    await window.electronAPI.renameNodeIndex(arbreId, nodeId, newId);
-    // 🔹 6. navigation
-    window.location.href = `editeur_noeud.html?arbre=${arbreId}&node=${newId}`;
+    await window.electronAPI.renameNodeIndex(arbreId,oldId,newId);
+    await window.electronAPI.deleteNode(arbreId,oldId);
+    window.location.href =`editeur_noeud.html?arbre=${arbreId}&node=${newId}`;
 }
 async function detectCycle(startId){
     const visited = new Set();
@@ -819,11 +888,6 @@ function validerNode(node){
     }
     if(!node.stack){
         console.error("Pas de stack");
-        return false;
-    }
-    // 🔒 stack non vide
-    if(node.stack.length === 0){
-        alert("Stack vide");
         return false;
     }
     // 🔒 chaque id de stack existe
