@@ -25,13 +25,10 @@ async function afficherCatalogue(arbres){
     ];
 
     for (const arbre of arbres){
-        if (installedIds.includes(arbre.id)){
-            continue;
-        }
         // affichage normal
         const card = document.createElement("div");
         card.classList.add("tree-card");
-
+        
         const title = document.createElement("h3");
         title.textContent = arbre.title;
 
@@ -47,9 +44,14 @@ async function afficherCatalogue(arbres){
             if (res){
                 btn.disabled=true;
                 btn.textContent="Installé ✅";
+                card.classList.add("installe")
             }
-            
         };
+        if (installedIds.includes(arbre.id)){
+            card.classList.add("installe")
+            btn.disabled=true;
+            btn.textContent="Installé ✅";
+        }
         card.appendChild(btn);
         card.appendChild(title);
         card.appendChild(desc);
