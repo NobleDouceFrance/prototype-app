@@ -1,9 +1,10 @@
 {
-  "id": "new_node",
+  "id": "fonctionnalites",
   "title": "Fonctionnalités",
   "stack": [
     "texte1",
-    "b1776942261032"
+    "b1776942261032",
+    "b1778666596609"
   ],
   "blocks": {
     "texte1": {
@@ -13,9 +14,14 @@
     "b1776942261032": {
       "type": "vof",
       "question": "Avez-vous compris ?",
-      "answers": true,
-      "explication": "Espace d'explication"
+      "answers": false,
+      "explication": "Espace d'explication \nPS : c'est ajouter"
+    },
+    "b1778666596609": {
+      "type": "text",
+      "texte": "Plus sérieusement, vous pouvez lire des arbres. \nSi vous arrivez sur une feuille (noeud sans suivant), soit il vous renvoie vers le premier noeud non validé s'il en existe, sinon, c'est que c'était le dernier noeud de l'arbre, donc vous l'avez terminé, vous être renvoyé sur sa page. \nMais s'il a un suivant, du coup ce n'est pas une feuille, vous y être envoyé automatiquement. \nS'il a plusieurs suivants, alors vous avez le choix. \n\nIl n'y a que le parcours descendant. \n\nPour créer un abre, il faut cliquer sur le bouton \"éditeur\" sur le bandeau de la page d'accueil. \nVous pouvez donner un nom, avoir direcrtement le noeud \"racine\" de créer. \nEn allant dessus, vous pouvez changer le titre, vous pouvez ajouter un bloc en précisant le contenu. \nAttention, vous ne pouvez pas supprimer le noeud racine. \n\nLorsque vous aurez plusieurs blocs, vous pourrez cliquer sur \"changer l'ordre des blocs\", pour voir une pile, vous pouvez glisser les éléments à changer. Attention, un peu capricieux pour la première et la dernière étiquette, il faut prendre celles au milieu pour les déplacer vers ces extrémités pour que ça fonctionne. \n\n\n\"Ajouter un suivant\", vous pouvez créer un noeud en donnant son titre, ce qui le crée automatiquement. \nVous pouvez séléctionner un noeud existant, sauf lui-même. Si vous voulez faire une boucle, pas de problème, sauf au moment de la publication. \n\nLe bouton \"sauvegarder\" est optionnel, c'est pour rassurer, la sauvaegarde automatique se fait toutes les 5 secondes après la moindre action sur la page (5 secondes, parce que sinon, ça surcharge lors de l'écriture d'un paragraphe comme celui-ci). \n\nLe bouton \"valider le noeud\" n'est pas encore fonctionnel, et sera sans doute là pour conseilé des changement sur l'arbre entier, pour indiqué ce qui n'est pas correct pour l'export. \n\nPour exporter, il faudrait avoir rempli le pseudo de votre profil (bouton sur le bandeau de la page d'acceuil), sinon, vérification plus stricte et moins rapide, mais tout à fait possible. \nC'est surtout si vous voulez en publier plusieurs. \n\nConcernant le \"calatogue\", aussi sur la page d'accueil, vous avez accès au .json du GitHub, pour afficher un bloc par arbre. \nEn cliquant sur \"télécharger\", vous télécharger puis dézippé l'archive depuis le GitHub. \nUne fois téléchargé, il appait sur la page d'accueil, prêt à être lu ! \n\nCes arbres sont vérifiés par manuellement et par Pipeline.  "
     }
   },
-  "validite": true
+  "validite": true,
+  "suivant": "lasuite"
 }
