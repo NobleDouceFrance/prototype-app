@@ -1,0 +1,76 @@
+{
+  "id": "lasuite",
+  "title": "lasuite",
+  "stack": [
+    "b1778667525759",
+    "b1778667631885",
+    "b1778667702020",
+    "b1778667697656",
+    "b1778667871315",
+    "b1778667910774",
+    "b1778670089593",
+    "b1778670063407",
+    "b1778670136782",
+    "b1778670598760"
+  ],
+  "blocks": {
+    "b1778667525759": {
+      "type": "text",
+      "texte": "Ici, vous allez avoir une démonstration de tout ce qui est possible de faire en l'état. \nSachant que je ne suis pas un pro du HTML, et pas non plus prof, alors en étant créatif, vous trouverez d'autres manipulation à faire pour proposer des intéractions avec les blocs existants !  "
+    },
+    "b1778667631885": {
+      "type": "qcm",
+      "question": "AVez-vous compris ?",
+      "answers": [
+        {
+          "text": "Vrai",
+          "correct": false
+        },
+        {
+          "text": "Faux",
+          "correct": false
+        }
+      ],
+      "explication": "Question de type QCM et non Vrai ou faux, pour avoir un comportement contre intuitif. "
+    },
+    "b1778667697656": {
+      "type": "iframe",
+      "url": "https://data.gouv.fr/"
+    },
+    "b1778667702020": {
+      "type": "text",
+      "texte": "Vous pouvez intégrer une fenêtre, si elle convient, si vous ne voulez pas tout recopier, mais, il faut qu'elle soit utilisable. \nAfficher la page (sur le bandeau en haut lorsque vous éditez votre noeud) pour voir et valider le rendu, sinon c'est très moche. \n\nJe vous divulgache le sujet du prochain projet : "
+    },
+    "b1778667871315": {
+      "type": "text",
+      "texte": "Vous pouvez mettre des questions, plutôt de science dur, pour avoir une seule réponse possible, et proposer une \"question ouverte\" : "
+    },
+    "b1778667910774": {
+      "type": "q",
+      "question": "1+1 = ?",
+      "reponse": "2",
+      "explication": "pour l'instant, il n' y pas le choix, seul \"2\" et tout le genre de : \"   2 \" (si ça commence ou termine pas des espace), ça fonctionne. \nPlus tard, vous pourrez décider s'il faut faire attention aux espaces intérieur, si c'est un nombre attendu, avoir 0.25=1/4. "
+    },
+    "b1778670063407": {
+      "type": "image",
+      "src": "Screenshot_2026-05-13_12_50_49a.png",
+      "alt": "",
+      "description": ""
+    },
+    "b1778670089593": {
+      "type": "text",
+      "texte": "Même si c'est galère d'écrire une formule, vous pouvez mettre des images et avoir ça :"
+    },
+    "b1778670136782": {
+      "type": "q",
+      "question": "Résultat ? ",
+      "reponse": "e",
+      "explication": "Il parait que la réponse est \"e\". "
+    },
+    "b1778670598760": {
+      "type": "text",
+      "texte": "On peut assi mettre des vidéos, mais pour une raison de stockage, je ne vais pas en mettre. "
+    }
+  },
+  "validite": true
+}
