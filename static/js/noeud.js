@@ -63,10 +63,12 @@ async function init(){
     // blocs
     const container = document.getElementById("contenu");
     
-    node.stack.forEach(blockId => {
+    for (const blockId of node.stack) {
         const block = node.blocks[blockId];
-        afficherBloc(block, blockId, container);
-    });
+        const blockContainer =document.createElement("div");
+        container.appendChild(blockContainer);
+        await afficherBloc(block,blockId,blockContainer);
+    }
     // bouton suivant
     if(node.suivant == null){
         document.getElementById("suivant").textContent = "Terminer";
