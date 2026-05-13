@@ -2,8 +2,19 @@
   "id": "demo",
   "title": "Premier Arbre",
   "root": "root",
-  "node_count": 1,
+  "nb_noeuds": 5,
   "noeuds": [
-    "root","new_node","cahier_des_charges"
-  ]
+    "root",
+    "fonctionnalites",
+    "cahier_des_charges",
+    "lasuite",
+    "brouillon"
+  ],
+  "createur":{
+    "id": null,
+    "pseudo": "D4rkL4C",
+    "github": "NobleDouceFrance",
+    "verified": false,
+    "created_at": 1778580532927
+  }
 }
