@@ -235,16 +235,21 @@ async function afficherBlocVoF(block, id, container){
     container.appendChild(inputQ);
     // réponses
     const answersDiv = document.createElement("button");
-    answersDiv.textContent="Vrai";
-    block.answers=true;
+    if (block.answers){
+        answersDiv.textContent="Vrai";
+    }
+    else {
+        answersDiv.textContent="Faux";
+    }
     answersDiv.onclick=()=>{
         if (answersDiv.textContent==="Vrai"){
             answersDiv.textContent="Faux";
             block.answers=false;
+            sauvegarderNoeud(currentNode);
         }else{
             answersDiv.textContent="Vrai";
             block.answers=true;
-
+            sauvegarderNoeud(currentNode);
         }
     }
     container.appendChild(answersDiv);
