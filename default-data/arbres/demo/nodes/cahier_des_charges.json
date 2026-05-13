@@ -2,23 +2,54 @@
   "id": "cahier_des_charges",
   "title": "Cahier des Charges",
   "stack": [
-    "b1776936416128",
-    "b1776952496580",
-    "b1776952742867"
+    "intro",
+    "lecture",
+    "ecriture",
+    "publication",
+    "pb",
+    "b1777492070889",
+    "decomposition1",
+    "b1778665522352",
+    "b1777494347554"
   ],
   "blocks": {
-    "b1776936416128": {
+    "intro": {
       "type": "text",
-      "texte": "J'ai d'abord eu l'idée de faire un logiciel pour \"apprendre\", initialement pour récupérer et lier les pages de Wikipédia, ce qui me semblait très simple puisqu'une page à bien souvent une section \"articles connexes/détaillés\". \n\nIl m'a donc fallu avoir un aspect \"lecture\", sauf que, enfaite, scraper Wikipédia c'est relativement pénible, alors autant que je fasse les liaisons moi-même au rythme de mes lectures et découvertes. \nEt là m'est venu l'idée de faire plus que simplement répertorier de la lecture : pourquoi ne pas me faire l'outil pédagogique ultime, avec création et suivi ! \n\nLà il vous manque une information... Depuis la terminale, avant chaque rentrée je me faisais un script pour rendre l'apprentissage ludique et actif pour être plus efficace (et passer moi de temps encore...) \nVoici la liste des types de programmes que j'ai écrit : \n - Un simple .csv pour répertorier des duos de question-réponse, et un .py pour me mettre une fenêtre et un label avec son input ;\n - Un suivi plus poussé avec roulement entre différentes tâches (à la manière d'un emploi du temps pour la semaine, avec : devoir répondre x fois à tel matière, et donc x fois d'autres avant de pouvoir faire la x+1 ième fois ; \n - Puis un .xlsx (tableur type excel), pour être moins intrusif, pour être plus simple que devoir mettre un formatage spécifique. \n\nSauf qu'aucun n'a durée plus de 2 mois... \nDonc maintenant ça fait 3 mois que je code en javascript (une première.)"
+      "texte": "J'ai d'abord eu l'idée de faire un logiciel pour \"apprendre\", initialement pour récupérer et lier les pages de Wikipédia, ce qui me semblait très simple puisqu'une page a toujours au moins une section \"articles connexes/détaillés\". \n\nIl m'a donc fallu avoir un aspect \"lecture\", sauf que, enfaite, <em>scraper</em> Wikipédia c'est relativement pénible, alors autant que je fasse les liaisons moi-même au rythme de mes lectures et découvertes. \nEt là m'est venu l'idée de faire plus que simplement répertorier de la lecture : pourquoi ne pas me faire l'outil pédagogique ultime, avec création et suivi ! \n\nLà il vous manque une information... Depuis la Terminale, avant chaque rentrée je me faisais un script pour rendre l'apprentissage ludique et actif pour être plus efficace (et passer moi de temps encore, mais avec une rétention d'information plus efficace, car active...) \n\nVoici la liste des types de programmes que j'ai écrit : \n - Un simple .csv pour répertorier des duos de question-réponse, et un .py pour me mettre une fenêtre et un label avec son input ;\n - Un suivi plus poussé avec roulement entre différentes tâches (à la manière d'un emploi du temps pour la semaine, avec : devoir répondre x fois toutes les matières avant de pouvoir faire la x+1 ième fois ; \n - Puis un .xlsx (tableur type excel), pour être moins intrusif, pour être plus simple que devoir mettre un formatage spécifique. \n\nSauf qu'aucun n'a durée plus de 2 mois... \nDu coup, ça fait 3 mois que je code en javascript (une première).\n\nRésultat collatéral : ça me semble être la plate-forme parfaite pour les histoires du type \"vous êtes le héros\"."
     },
-    "b1776952496580": {
+    "lecture": {
       "type": "text",
-      "texte": "Il me fallait donc : \nUne interface pour lire \n>Lire du texte, des images, des liens etc. \n >Séparer entre des \"noeuds\", pour une représentation par arbre dans le sens informatique du terme. \n  >Relier des noeuds et faire un suivis pour ne pas avoir à parcourir tout à la main à chaque, ni pour perdre toute la progression à chaque session/fermeture."
+      "texte": "Il me fallait donc : \nUne interface pour lire :\n>Lire du texte, des images, des liens etc ;\n >Pour la partie graphique, puisque je ne voulais pas me prendre le tête pour gérer le placement des éléments, que le html est fait pour ça, avec en plus, l'ajustement à la taille de l'écran qui est automatique (ce que je n'ai jamais fait et qui, parait-il, est pénible), alors j'ai choisi le javascript pour aller avec les script intégrer dans html ; \n>Même si les  \"leçons\" sont créées, il faut encore séparer les notions entre des \"noeuds\", pour une représentation par arbre dans le sens informatique du terme ;\n >Relier des noeuds et faire un suivis pour ne pas avoir à parcourir tout à la main à chaque fois, ni pour perdre toute la progression à chaque session (fermeture) ;\n >Donc, progression enregistrer, suivi : par arbre, noeud et par bloc intéractif (type qcm) ;"
     },
-    "b1776952742867": {
+    "ecriture": {
       "type": "text",
-      "texte": "Une interfaxe pour écrire\n>Intégrer une base de données avec permission d'écriture (une première hors .txt et .csv)\n >Une interface pour écrire les \"noeuds\" (parce que faire les .json à la mains ça va 2 minutes pas plus.)\n  >"
+      "texte": "Une interface pour écrire :\n>Intégrer une base de données avec permission d'écriture (une première hors .txt et .csv)\n >Une interface pour écrire les \"noeuds\" (parce que faire les .json à la mains ça va 2 minutes, au-delà c'est vite pénible de faire attention aux \"{}\"...)"
+    },
+    "publication": {
+      "type": "text",
+      "texte": "À quoi ça sert de créer un arbre complet pour soi ? (c'est juste pour ça que j'ai commencé, mais cherchons à faire plus !) Il faut encore trouver une plate-forme pour publier les créations : \n - dont la publication est public, pas sur un serveur privé opaque, mais où la moindre action est visible et suivable ; \n - aucun frais de stockage, ni aucun coût lié à un site auto-gérer (mon côté économe, pour ne pas dire radin) ;\n - avec des liens imuables ;"
+    },
+    "pb": {
+      "type": "text",
+      "texte": "Je vais être honnête, j'ai fait, sans me poser les questions des objectifs à remplir... Mais, je ne suis pas débile, chaque ajout, chaque étape, était l'occasion de penser à la porter, les attentes et nécessités à l'avenir. Typiquement, j'ai d'abord fait la partie Lecture, avec la bonne séparation des noeuds, la bonne organisation du noeud en lui-même pour que ça soit extrêment simple de passer à la partie Écriture : j'avais déjà le système de bloc et de leur typage ainsi que de pile pour les organiser linéairement sur la page. "
+    },
+    "b1777492070889": {
+      "type": "text",
+      "texte": "Pour rationnaliser et créer un vrai « cahier des charges », je reformulerais les premiers objectifs comme suit : \n\n- Avoir une interface graphique ; \n\t>Être ergonomique ; \n- Avoir une base de données ; \n\t>Ajouter, supprimer et éditer des données ; \n- Être évolutif ; \n\t>Avoir un système de mise à jour ; \n\nC'est tout simple, mais il faut y penser et trouver les moyens pour y répondre. \nPour la partie graphique, je fais du <em>backend</em> donc je ne m'y connaîs pas, je ne suis pas doué et je ne voulais pas me compliquer la vie, alors j'ai choisi du simple HTML et CSS ; pas des lanagages de programmation à proprement parlé, mais largement suffisant (même si à l'avenir, j'espère pouvoir intégrer un module \"d'exploration d'environnement 3D\", en moins pompeux : pouvoir intégrer des images/vidéos 360°, voire même des espace Blender, totalement hors de porter pour moi.) \n\nErgonomie : pourquoi HTML (et CSS) ? parce que je n'ai pas à m'occuper de l'adaptabilité pour différentes tailles d'écran, qui d'après mon expérience quasi nul sur Python avec Tkinter est inutilement pénible quand un tel outil existe. \nAlors le choix de Javascript s'est imposé à moi, je savais déjà que ce que je voulais faire était possible, même si je me suis sans doute un peu retardé en devant apprendre un tout nouveau lanagage de programmation et d'autre notions, alors qu'en Java aurait pu être possible. \n\nBase de données : il m'en fallait une qui puisse être adaptative dans les attributs et leur quantité. J'avais déjà utilisé des .csv, mais ça me paraissait trop rigide, et les .txt pas assez réactif par rapport aux .json, avec directement la notion \"cle-valeur\", ou plutôt \"attribut-valeur\" (attention si vos yeux se sont croisés pendant la lecture !), parfaitement fonctionnel pour : lecture, écriture, édition. \n\nÉvolutif : Github. Vous connaissez autre chose ? \nIl me fallait aussi un site pour stocker les données, les diffusées, avec une séparation entre : code vérifier, données (arbres) tout public validé, et ces arbres proposés par la communauté avant validation ; et ce, totalement public pour éventuellement avoir des réclamations par d'autres personnes que la ténacité de l'auteur. "
+    },
+    "decomposition1": {
+      "type": "text",
+      "texte": "Décomposons encore ces sujets pour comprendre le projet : \n\nL'interface graphique : limitations des intéractions posisbles : boutons quasi uniquement (pour la lecture), car  il ne faut jamais faire confiance à ce que donne l'utilisateur. À tout moment il se trompte dans ce qu'il écrit, oublie un caractère, en inverse deux. J'aurais pu faire faire un script pour déterminer la valeur et donc la validité, mais c'est clairement long. Alors pour cette V1, il n'y a qu'une entrée d'écriture avec le type : question ouverte avec réponse textuelle exacte (\"x\"===\"x\"). \n\nÉdition des bases de données : il faut ue arborescence claire pour séparer et donner une petite instruction les concernant. Pour ce faire, toutes les données d'arbres sont au même endroit. Il y a aussi une séparation entre données inchangées (dans l'exécutable) et les données éditable dans votre dossier /prototype/ à la racine de vos dossiers. \n\nÊtre évolutif : j'ai dû apprendre à compiler des fichiers, et mettre sur GitHub dans Release pour avoir la mise-à-jour automatique. Plus tard, lorsque ça pourrait être nécessaire, il y aura un système d'instruction pour dire : \"mettre à jour les arbres, en ajoutant tel attribut, avec tel valeur par défaut si indéterminable\" "
+    },
+    "b1777494347554": {
+      "type": "text",
+      "texte": "<details>\n<summary></summary>\n<p></p>\n</details>"
+    },
+    "b1778665522352": {
+      "type": "text",
+      "texte": "Les Releases dans l'ordre : \nV1.0.0 : première version distribuée, avec utilisation local fonctionnel ; \nV1.0.1 : mise-à-jour pour testé l'autoUpdate() ; \nV1.1.0 : véritable version utilisable, présenté et présentable pour Legend ; \n\nPlus tard : \nAu plus vite, mais au mieux, création d'un pipeline sur le GitHub pour automatisé la vérificiation des arbres .zip. \nV1.1.X pour toutes corrections mineurs et nécessaires \nV1.2.0 : correction importante, avec des bloc try-catch pour permettre l'utilisation même en cas d'erreur de données ; aussi, mise en place d'un systeme.json pour centraliser toutes les données qui peuvent changer, mais être utile à plein d'endroit, sans devoir retrouver pour modifier ; \nV1.3.0 ; mise en place d'un .log en cas d'erreur, de réclamation, util pour un rapport de bug \nV1.4.0 : lorsqu'il y aura de nouveau types de bloc, comme : code informatique ; pile d'éléments à ordonné ; tableau à remplir soit avec des bouton soit avec des entrée avec 1 ou 2 caractère ; etc. \nV1.5.0 : amélioration de l'interface pour être plus ergonomique et intuitif \n\nV2.0.0 : si l'aspect graphique change "
     }
   },
-  "validite": true
+  "validite": true,
+  "suivant": "brouillon"
 }
