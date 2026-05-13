@@ -13,15 +13,15 @@
     },
     "final": {
       "type": "text",
-      "texte": "Maintenant je vous laisse cliquer sur \"suivant\" pour aller voir \"Fonctionnalités\" et vous donner l'eau à la bouche pour savoir tout ce qui est possible de faire !"
+      "texte": "Maintenant je vous laisse cliquer sur \"suivant\" pour aller voir \"Fonctionnalités\" et vous donner l'eau à la bouche pour savoir tout ce qui est possible de faire !\n\nMais si vous préférer connaître les cheminements qui ont mené à ce résultat, allez sur \"Cahier des charges\" !"
     },
     "corps1": {
       "type": "text",
-      "texte": "Il y a tout de même certaines choses à savoir : \n\t1. Ce projet a été fait entre février et avril 2026, par pur initiative personnel ; \n\t2. Si vous avez un problème, quelque chose qui ne se fait pas, faite ctrl+shift+i pour afficher la console avec les erreurs écrites ;\n\t3. Ce projet est entièrement gratuit, fondé sur le principe de relecture par les pairs, dans l'optique de proposer un outil aussi complet qu'util en plus de pouvoir être diffusé sans limite. "
+      "texte": "Il y a tout de même certaines choses à savoir : \n\t- Ce projet a été fait entre février et avril 2026, par pur initiative personnel ; \n\t- Si vous avez un problème, quelque chose qui ne se fait pas, faite ctrl+shift+i pour afficher la console avec les erreurs écrites ;\n\t- Ce projet est entièrement gratuit, fondé sur le principe de relecture par les pairs, dans l'optique de proposer un outil aussi complet qu'util en plus de pouvoir être diffusé sans limite. "
     }
   },
   "suivant": [
-    "new_node",
+    "fonctionnalites", 
     "cahier_des_charges"
   ],
   "validite": true
