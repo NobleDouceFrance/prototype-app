@@ -1,0 +1,14 @@
+{
+  "id": "brouillon",
+  "title": "Brouillon",
+  "stack": [
+    "b1778615779899"
+  ],
+  "blocks": {
+    "b1778615779899": {
+      "type": "text",
+      "texte": "avant de coder, il fallait : \n - une interface graphique \n => j'ai pensé à utilisé du HTML et CSS \n => résultat, le javascript s'est imposé dans ma tête, car je savais que c'était possible de manipuler du HTML avec\n\n - comment publier ? \n => il fallait exposer le code, avoir les arbres en libre consultation pour les proposer, sans que j'ai la main sur le site pour supprimer ou modifier sous le manteau pour mettre une quelconque propagande, avec aussi, le fait que ça ne me coûte rien, donc, sur GitHub\n\n - Stocker des données pour lecture, édition et écriture, avec l'aspect \"clé-valeur\". \n => format .JSON\n\n\n\nEnsuite, que fallait-il ? \n => pouvoir lire, du texte, intégrer des pages, des vidéos des images, et des blocs intéractifs pour avoir un aspect ludique \n => pouvoir écrire, que ça soit évolutif, intuitif avec une base généralisable pour l'appliquer à ce que je n'ai pas pensé. \n\nC'est pourquoi un noeud est composé de plusieurs blocs disposé linéairement, avec leur id, type et contenu, couplé à une pile pour ordonné ses blocs. \n\n\nPuis, c'est l'aspect écriutre qui a conditionné la lecture : \nPrivilégié les intéractions utilisateur par des bouton plutôt que des inputs dont le valeur entrée peut être inexacte. \n\nDonc, choix de créer, importer ou dupliquer un arbre en cliquant sur un bouton. Pareil pour choix du bloc, manière d'ajouter un noeud suivant, changer le titre. "
+    }
+  },
+  "validite": true
+}
